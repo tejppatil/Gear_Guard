@@ -12,10 +12,13 @@ import {
     Settings,
     Menu,
     BarChart3,
+    LogOut,
+    User as UserIcon,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
 
 const sidebarItems = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -29,6 +32,10 @@ const sidebarItems = [
 export function Sidebar() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
+    const { user, logout } = useAuth();
+
+    // Don't show sidebar on login page
+    if (pathname === '/login') return null;
 
     return (
         <>
@@ -68,31 +75,54 @@ export function Sidebar() {
                     </Link>
                 </div>
                 <div className="flex flex-col gap-2 p-4">
-                    {sidebarItems.map((item) => {
-                        const Icon = item.icon;
-                        const isActive = pathname === item.href;
-                        return (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                onClick={() => setIsOpen(false)}
-                                className={cn(
-                                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground",
-                                    isActive ? "bg-primary/10 text-primary" : "text-muted-foreground"
-                                )}
-                            >
-                                <Icon className="h-4 w-4" />
-                                {item.label}
-                            </Link>
-                        );
-                    })}
+                    {sidebarItems
+                        .filter(item => {
+                            // Hide Teams and Reports for team users
+                            if (user?.role === 'team' && (item.href === '/teams' || item.href === '/reports')) {
+                                return false;
+                            }
+                            return true;
+                        })
+                        .map((item) => {
+                            const Icon = item.icon;
+                            const isActive = pathname === item.href;
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    onClick={() => setIsOpen(false)}
+                                    className={cn(
+                                        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground",
+                                        isActive ? "bg-primary/10 text-primary" : "text-muted-foreground"
+                                    )}
+                                >
+                                    <Icon className="h-4 w-4" />
+                                    {item.label}
+                                </Link>
+                            );
+                        })}
                 </div>
 
-                {/* User / Settings Footer (Optional) */}
+                {/* User / Logout Footer */}
                 <div className="mt-auto border-t p-4">
-                    <Button variant="ghost" className="w-full justify-start gap-3">
-                        <Settings className="h-4 w-4" />
-                        Settings
+                    {user && (
+                        <div className="mb-2 px-3 py-2 bg-muted/50 rounded-lg">
+                            <div className="flex items-center gap-2 text-sm">
+                                <UserIcon className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="font-medium">{user.name}</p>
+                                    <p className="text-xs text-muted-foreground capitalize">{user.role}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    <Button
+                        variant="ghost"
+                        className="w-full justify-start gap-3"
+                        onClick={logout}
+                    >
+                        <LogOut className="h-4 w-4" />
+                        Logout
                     </Button>
                 </div>
             </motion.aside>

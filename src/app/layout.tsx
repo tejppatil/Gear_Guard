@@ -1,33 +1,34 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
-import { cn } from "@/lib/utils";
+import { AuthProvider } from "@/context/AuthContext";
+import ProtectedLayout from "@/components/ProtectedLayout";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "GearGuard - Maintenance Tracker",
-  description: "Ultimate Maintenance Management System",
+  description: "Efficiently manage equipment and maintenance requests.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased flex flex-col md:flex-row",
-          inter.variable
-        )}
-      >
-        <Sidebar />
-        <main className="flex-1 w-full overflow-y-auto h-screen p-4 md:p-8 pt-6">
-          {children}
-        </main>
+      <body className={inter.className}>
+        <AuthProvider>
+          <ProtectedLayout>
+            <div className="flex h-screen bg-background">
+              <Sidebar />
+              <main className="flex-1 overflow-y-auto bg-gray-50/50 p-8">
+                {children}
+              </main>
+            </div>
+          </ProtectedLayout>
+        </AuthProvider>
       </body>
     </html>
   );

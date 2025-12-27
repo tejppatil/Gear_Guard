@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronDown, ChevronUp } from "lucide-react"
+import { Check, ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 // Simple Context Mock for Select
@@ -64,11 +64,6 @@ SelectTrigger.displayName = "SelectTrigger"
 const SelectValue = React.forwardRef<HTMLSpanElement, any>(
     ({ className, placeholder, ...props }, ref) => {
         const { value } = React.useContext(SelectContext)
-        // We can't easily map value to label without children inspection in this simple mock, 
-        // but for now we'll display value if present, or placeholder.
-        // In a real app we'd need a map. For this demo, let's assume value ~ label or we need a trick.
-        // TRICK: We will let the SelectContent render pass the labels back up? No.
-        // Simple fallback: Just render value. 
         return (
             <span ref={ref} className={cn("block truncate", className)} {...props}>
                 {value || placeholder}
@@ -127,18 +122,10 @@ const SelectItem = React.forwardRef<HTMLDivElement, any>(
 )
 SelectItem.displayName = "SelectItem"
 
-// Stubs for others
-const SelectGroup = ({ children }: any) => <>{children}</>
-const SelectLabel = ({ children }: any) => <div className="py-1.5 pl-8 pr-2 text-sm font-semibold">{children}</div>
-const SelectSeparator = () => <div className="-mx-1 my-1 h-px bg-muted" />
-
 export {
     Select,
-    SelectGroup,
     SelectValue,
     SelectTrigger,
     SelectContent,
-    SelectLabel,
     SelectItem,
-    SelectSeparator,
 }

@@ -1,45 +1,54 @@
 {
   "teams": [
     {
-      "_id": "1",
-      "name": "Mechanics",
+      "_id": "team_electrical",
+      "name": "Electrical Team",
       "members": [
-        "Mike Ross",
-        "Harvey Specter",
-        "Robert Zane"
+        "John Smith",
+        "Sarah Johnson",
+        "Mike Davis"
       ]
     },
     {
-      "_id": "2",
-      "name": "Electrical",
+      "_id": "team_mechanical",
+      "name": "Mechanical Team",
       "members": [
-        "Louis Litt",
-        "Donna Paulsen",
-        "Katrina Bennett"
+        "Tom Brown",
+        "Emily White",
+        "Chris Lee"
       ]
     },
     {
-      "_id": "3",
-      "name": "IT Support",
+      "_id": "team_it",
+      "name": "IT Team",
       "members": [
-        "Rachel Zane",
-        "Harold Gunderson"
+        "Alex Kim",
+        "Rachel Green"
       ]
     },
     {
-      "_id": "4",
-      "name": "Facilities",
+      "_id": "team_production",
+      "name": "Production Team",
       "members": [
-        "Jessica Pearson",
-        "Daniel Hardman"
+        "David Wilson",
+        "Lisa Anderson"
       ]
     },
     {
-      "_id": "5",
-      "name": "Safety Crew",
+      "_id": "team_logistics",
+      "name": "Logistics Team",
       "members": [
-        "Sheila Sazs",
-        "Oliver Grady"
+        "James Taylor",
+        "Maria Garcia",
+        "Robert Martinez"
+      ]
+    },
+    {
+      "_id": "team_working",
+      "name": "Working Team",
+      "members": [
+        "Arjit Tomar",
+        "Michael Rana"
       ]
     }
   ],
@@ -51,11 +60,11 @@
       "department": "Production",
       "location": "Factory Floor 1",
       "status": "Active",
-      "category": "Heavy Machinery",
+      "category": "Machinery",
       "purchaseDate": "2023-01-15",
       "maintenanceTeam": {
-        "name": "Mechanics",
-        "_id": "1"
+        "name": "Mechanical Team",
+        "_id": "team_mechanical"
       }
     },
     {
@@ -65,11 +74,11 @@
       "department": "Production",
       "location": "Factory Floor 2",
       "status": "Maintenance",
-      "category": "Heavy Machinery",
+      "category": "Machinery",
       "purchaseDate": "2022-11-20",
       "maintenanceTeam": {
-        "name": "Mechanics",
-        "_id": "1"
+        "name": "Mechanical Team",
+        "_id": "team_mechanical"
       }
     },
     {
@@ -82,22 +91,8 @@
       "category": "Machinery",
       "purchaseDate": "2021-06-10",
       "maintenanceTeam": {
-        "name": "Mechanics",
-        "_id": "1"
-      }
-    },
-    {
-      "_id": "106",
-      "name": "Conveyor Belt System",
-      "serialNumber": "CBS-1122",
-      "department": "Logistics",
-      "location": "Warehouse 1",
-      "status": "Active",
-      "category": "Logistics",
-      "purchaseDate": "2020-09-05",
-      "maintenanceTeam": {
-        "name": "Mechanics",
-        "_id": "1"
+        "name": "Mechanical Team",
+        "_id": "team_mechanical"
       }
     },
     {
@@ -107,11 +102,11 @@
       "department": "Facilities",
       "location": "Basement",
       "status": "Active",
-      "category": "Electrical",
+      "category": "Electronics",
       "purchaseDate": "2020-03-15",
       "maintenanceTeam": {
-        "name": "Electrical",
-        "_id": "2"
+        "name": "Electrical Team",
+        "_id": "team_electrical"
       }
     },
     {
@@ -121,11 +116,11 @@
       "department": "Facilities",
       "location": "Power Room",
       "status": "Active",
-      "category": "Electrical",
+      "category": "Electronics",
       "purchaseDate": "2019-12-12",
       "maintenanceTeam": {
-        "name": "Electrical",
-        "_id": "2"
+        "name": "Electrical Team",
+        "_id": "team_electrical"
       }
     },
     {
@@ -135,25 +130,25 @@
       "department": "Facilities",
       "location": "Roof",
       "status": "Maintenance",
-      "category": "HVAC",
+      "category": "Electronics",
       "purchaseDate": "2021-08-20",
       "maintenanceTeam": {
-        "name": "Electrical",
-        "_id": "2"
+        "name": "Electrical Team",
+        "_id": "team_electrical"
       }
     },
     {
       "_id": "102",
       "name": "Office Printer X1",
       "serialNumber": "PRT-9988",
-      "department": "Admin",
+      "department": "IT",
       "location": "Office 202",
       "status": "Active",
-      "category": "Office Electronics",
+      "category": "Electronics",
       "purchaseDate": "2024-05-10",
       "maintenanceTeam": {
-        "name": "IT Support",
-        "_id": "3"
+        "name": "IT Team",
+        "_id": "team_it"
       }
     },
     {
@@ -163,121 +158,99 @@
       "department": "IT",
       "location": "Server Room",
       "status": "Active",
-      "category": "Computing",
+      "category": "Electronics",
       "purchaseDate": "2022-02-28",
       "maintenanceTeam": {
-        "name": "IT Support",
-        "_id": "3"
+        "name": "IT Team",
+        "_id": "team_it"
       }
     },
     {
       "_id": "110",
       "name": "Conference Projector",
       "serialNumber": "PROJ-4K",
-      "department": "Admin",
+      "department": "IT",
       "location": "Conf Room B",
       "status": "Scrap",
-      "category": "AV Equipment",
+      "category": "Electronics",
       "purchaseDate": "2018-07-15",
       "maintenanceTeam": {
-        "name": "IT Support",
-        "_id": "3"
+        "name": "IT Team",
+        "_id": "team_it"
       }
     },
     {
       "_id": "111",
-      "name": "Forklift Model Z",
-      "serialNumber": "FL-9900",
-      "department": "Logistics",
-      "location": "Warehouse 2",
+      "name": "Assembly Robot Arm",
+      "serialNumber": "RBT-9900",
+      "department": "Production",
+      "location": "Assembly Line",
       "status": "Active",
-      "category": "Vehicle",
+      "category": "Machinery",
       "purchaseDate": "2023-11-01",
       "maintenanceTeam": {
-        "name": "Facilities",
-        "_id": "4"
+        "name": "Production Team",
+        "_id": "team_production"
       }
     },
     {
       "_id": "112",
-      "name": "Water Pump System",
-      "serialNumber": "WPS-2211",
-      "department": "Facilities",
-      "location": "Pump Room",
+      "name": "Quality Control Scanner",
+      "serialNumber": "QCS-2211",
+      "department": "Production",
+      "location": "QC Station",
       "status": "Active",
-      "category": "Plumbing",
+      "category": "Electronics",
       "purchaseDate": "2021-04-18",
       "maintenanceTeam": {
-        "name": "Facilities",
-        "_id": "4"
+        "name": "Production Team",
+        "_id": "team_production"
       }
     },
     {
       "_id": "113",
-      "name": "Fire Alarm System",
-      "serialNumber": "FAS-777",
-      "department": "Security",
-      "location": "Building Wide",
+      "name": "Forklift Model Z",
+      "serialNumber": "FL-777",
+      "department": "Logistics",
+      "location": "Warehouse 2",
       "status": "Active",
-      "category": "Safety",
+      "category": "Vehicle",
       "purchaseDate": "2020-01-01",
       "maintenanceTeam": {
-        "name": "Safety Crew",
-        "_id": "5"
+        "name": "Logistics Team",
+        "_id": "team_logistics"
       }
     },
     {
       "_id": "114",
-      "name": "Automated Defibrillator",
-      "serialNumber": "AED-005",
-      "department": "HR",
-      "location": "Lobby",
+      "name": "Pallet Jack Electric",
+      "serialNumber": "PJ-005",
+      "department": "Logistics",
+      "location": "Warehouse 1",
       "status": "Active",
-      "category": "Medical",
+      "category": "Vehicle",
       "purchaseDate": "2023-06-30",
       "maintenanceTeam": {
-        "name": "Safety Crew",
-        "_id": "5"
+        "name": "Logistics Team",
+        "_id": "team_logistics"
+      }
+    },
+    {
+      "_id": "115",
+      "name": "Inventory Scanner",
+      "serialNumber": "INV-hub-01",
+      "department": "Logistics",
+      "location": "Warehouse Office",
+      "status": "Active",
+      "category": "Electronics",
+      "purchaseDate": "2022-05-15",
+      "maintenanceTeam": {
+        "name": "Logistics Team",
+        "_id": "team_logistics"
       }
     }
   ],
   "requests": [
-    {
-      "subject": "gfv",
-      "equipment": {
-        "name": "CNC Milling Machine",
-        "_id": "101"
-      },
-      "type": "Corrective",
-      "priority": "Low",
-      "description": "",
-      "scheduledDate": "",
-      "requestedBy": "Current User",
-      "maintenanceTeam": {
-        "name": "Mechanics",
-        "_id": "1"
-      },
-      "_id": "q5jvx9w34",
-      "createdAt": "2025-12-27T08:53:47.161Z"
-    },
-    {
-      "subject": "ttt",
-      "equipment": {
-        "name": "CNC Milling Machine",
-        "_id": "101"
-      },
-      "type": "Preventive",
-      "priority": "High",
-      "description": "dsvv",
-      "scheduledDate": "2025-12-02",
-      "requestedBy": "Current User",
-      "maintenanceTeam": {
-        "name": "Mechanics",
-        "_id": "1"
-      },
-      "_id": "ww2pmnc58",
-      "createdAt": "2025-12-27T08:53:07.284Z"
-    },
     {
       "_id": "201",
       "subject": "Hydraulic Leak Fix",
@@ -286,13 +259,13 @@
         "_id": "103"
       },
       "type": "Corrective",
-      "status": "Repaired",
+      "status": "In Progress",
       "priority": "High",
       "maintenanceTeam": {
-        "name": "Mechanics",
-        "_id": "1"
+        "name": "Mechanical Team",
+        "_id": "team_mechanical"
       },
-      "createdAt": "2025-12-27T08:53:07.279Z"
+      "createdAt": "2025-12-27T10:00:00.000Z"
     },
     {
       "_id": "202",
@@ -305,11 +278,11 @@
       "status": "New",
       "priority": "Medium",
       "maintenanceTeam": {
-        "name": "Mechanics",
-        "_id": "1"
+        "name": "Mechanical Team",
+        "_id": "team_mechanical"
       },
-      "scheduledDate": "2026-01-01T08:53:07.279Z",
-      "createdAt": "2025-12-27T08:53:07.279Z"
+      "scheduledDate": "2026-01-01T00:00:00.000Z",
+      "createdAt": "2025-12-27T10:00:00.000Z"
     },
     {
       "_id": "203",
@@ -319,13 +292,13 @@
         "_id": "102"
       },
       "type": "Corrective",
-      "status": "Repaired",
+      "status": "New",
       "priority": "Low",
       "maintenanceTeam": {
-        "name": "IT Support",
-        "_id": "3"
+        "name": "IT Team",
+        "_id": "team_it"
       },
-      "createdAt": "2025-12-27T08:53:07.279Z"
+      "createdAt": "2025-12-27T10:00:00.000Z"
     },
     {
       "_id": "204",
@@ -338,11 +311,11 @@
       "status": "New",
       "priority": "Medium",
       "maintenanceTeam": {
-        "name": "Electrical",
-        "_id": "2"
+        "name": "Electrical Team",
+        "_id": "team_electrical"
       },
-      "scheduledDate": "2025-12-29T08:53:07.279Z",
-      "createdAt": "2025-12-27T08:53:07.279Z"
+      "scheduledDate": "2025-12-29T00:00:00.000Z",
+      "createdAt": "2025-12-27T10:00:00.000Z"
     },
     {
       "_id": "205",
@@ -352,48 +325,48 @@
         "_id": "109"
       },
       "type": "Preventive",
-      "status": "In Progress",
+      "status": "Repaired",
       "priority": "High",
       "maintenanceTeam": {
-        "name": "IT Support",
-        "_id": "3"
+        "name": "IT Team",
+        "_id": "team_it"
       },
-      "scheduledDate": "2025-12-17T08:53:07.279Z",
-      "createdAt": "2025-12-27T08:53:07.279Z"
+      "scheduledDate": "2025-12-17T00:00:00.000Z",
+      "createdAt": "2025-12-27T10:00:00.000Z"
     },
     {
       "_id": "206",
-      "subject": "Brake Inspection",
+      "subject": "Robot Calibration",
       "equipment": {
-        "name": "Forklift Model Z",
+        "name": "Assembly Robot Arm",
         "_id": "111"
-      },
-      "type": "Preventive",
-      "status": "Repaired",
-      "priority": "Critical",
-      "maintenanceTeam": {
-        "name": "Facilities",
-        "_id": "4"
-      },
-      "scheduledDate": "2025-12-27T08:53:07.279Z",
-      "createdAt": "2025-12-27T08:53:07.279Z"
-    },
-    {
-      "_id": "207",
-      "subject": "Sensor Calibration",
-      "equipment": {
-        "name": "Fire Alarm System",
-        "_id": "113"
       },
       "type": "Preventive",
       "status": "In Progress",
       "priority": "Critical",
       "maintenanceTeam": {
-        "name": "Safety Crew",
-        "_id": "5"
+        "name": "Production Team",
+        "_id": "team_production"
       },
-      "scheduledDate": "2025-12-28T08:53:07.279Z",
-      "createdAt": "2025-12-27T08:53:07.279Z"
+      "scheduledDate": "2025-12-27T00:00:00.000Z",
+      "createdAt": "2025-12-27T10:00:00.000Z"
+    },
+    {
+      "_id": "207",
+      "subject": "Forklift Inspection",
+      "equipment": {
+        "name": "Forklift Model Z",
+        "_id": "113"
+      },
+      "type": "Preventive",
+      "status": "New",
+      "priority": "Critical",
+      "maintenanceTeam": {
+        "name": "Logistics Team",
+        "_id": "team_logistics"
+      },
+      "scheduledDate": "2025-12-28T00:00:00.000Z",
+      "createdAt": "2025-12-27T10:00:00.000Z"
     },
     {
       "_id": "208",
@@ -403,13 +376,87 @@
         "_id": "110"
       },
       "type": "Corrective",
-      "status": "In Progress",
+      "status": "Scrap",
       "priority": "Low",
       "maintenanceTeam": {
-        "name": "IT Support",
-        "_id": "3"
+        "name": "IT Team",
+        "_id": "team_it"
       },
-      "createdAt": "2025-12-27T08:53:07.279Z"
+      "createdAt": "2025-12-27T10:00:00.000Z"
+    },
+    {
+      "_id": "209",
+      "subject": "Generator Test Run",
+      "equipment": {
+        "name": "Backup Generator",
+        "_id": "107"
+      },
+      "type": "Preventive",
+      "status": "New",
+      "priority": "High",
+      "maintenanceTeam": {
+        "name": "Electrical Team",
+        "_id": "team_electrical"
+      },
+      "scheduledDate": "2026-01-10T00:00:00.000Z",
+      "createdAt": "2025-12-27T10:00:00.000Z"
+    }
+  ],
+  "users": [
+    {
+      "_id": "admin",
+      "username": "admin",
+      "password": "admin123",
+      "role": "admin",
+      "name": "Administrator"
+    },
+    {
+      "_id": "team_electrical",
+      "username": "electricalteam",
+      "password": "pass",
+      "role": "team",
+      "teamId": "team_electrical",
+      "name": "Electrical Team"
+    },
+    {
+      "_id": "team_mechanical",
+      "username": "mechanicalteam",
+      "password": "pass",
+      "role": "team",
+      "teamId": "team_mechanical",
+      "name": "Mechanical Team"
+    },
+    {
+      "_id": "team_it",
+      "username": "itteam",
+      "password": "pass",
+      "role": "team",
+      "teamId": "team_it",
+      "name": "IT Team"
+    },
+    {
+      "_id": "team_production",
+      "username": "productionteam",
+      "password": "pass",
+      "role": "team",
+      "teamId": "team_production",
+      "name": "Production Team"
+    },
+    {
+      "_id": "team_logistics",
+      "username": "logisticsteam",
+      "password": "pass",
+      "role": "team",
+      "teamId": "team_logistics",
+      "name": "Logistics Team"
+    },
+    {
+      "_id": "team_working",
+      "username": "workingteam",
+      "password": "pass",
+      "role": "team",
+      "teamId": "team_working",
+      "name": "Working Team"
     }
   ]
 }

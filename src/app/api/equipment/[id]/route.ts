@@ -35,11 +35,17 @@ export async function PATCH(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    let body;
+    const { id } = await params;
+
+    try {
+        body = await request.json();
+    } catch (e) {
+        return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+    }
+
     try {
         await connectToDatabase();
-        const { id } = await params;
-        const body = await request.json();
-
         const updated = await Equipment.findByIdAndUpdate(id, body, { new: true });
 
         if (!updated) {
@@ -48,7 +54,19 @@ export async function PATCH(
 
         return NextResponse.json(updated);
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to update equipment' }, { status: 500 });
+        console.warn('Database offline, updating equipment in file');
+        try {
+            const { updateEquipment } = await import('@/lib/storage');
+            const updated = updateEquipment(id, body);
+
+            if (!updated) {
+                return NextResponse.json({ error: 'Equipment not found' }, { status: 404 });
+            }
+
+            return NextResponse.json(updated);
+        } catch (storageError) {
+            return NextResponse.json({ error: 'Failed to update equipment' }, { status: 500 });
+        }
     }
 }
 

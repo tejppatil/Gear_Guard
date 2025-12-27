@@ -3,17 +3,22 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Clock, GripVertical, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/context/AuthContext";
 
 interface RequestCardProps {
     id: string;
     request: any;
-    teamMembers?: string[]; // Optional: if provided, show assignment dropdown
+    teamMembers?: string[];
     onAssign?: (requestId: string, member: string) => void;
+    onComplete?: (requestId: string) => void;
+    onStatusChange?: (requestId: string, status: string) => void;
 }
 
-export function RequestCard({ id, request, teamMembers, onAssign }: RequestCardProps) {
+export function RequestCard({ id, request, teamMembers, onAssign, onComplete, onStatusChange }: RequestCardProps) {
+    const { user } = useAuth();
+
     const {
         attributes,
         listeners,
@@ -37,6 +42,9 @@ export function RequestCard({ id, request, teamMembers, onAssign }: RequestCardP
     };
 
     const colorClass = priorityColor[request.priority as string] || 'bg-gray-100';
+
+    // Assignment locking: team users cannot reassign once assigned
+    const isAssignmentLocked = user?.role === 'team' && request.assignedTo;
 
     return (
         <div ref={setNodeRef} style={style} className="mb-3 touch-none">
@@ -70,22 +78,42 @@ export function RequestCard({ id, request, teamMembers, onAssign }: RequestCardP
                                 <User className="h-3 w-3 text-muted-foreground" />
                                 <span className="text-xs font-medium text-muted-foreground">Assigned To:</span>
                             </div>
-                            <Select
-                                value={request.assignedTo || "unassigned"}
-                                onValueChange={(val) => onAssign && onAssign(id, val === "unassigned" ? "" : val)}
-                            >
-                                <SelectTrigger className="h-7 text-xs w-full">
-                                    <SelectValue placeholder="Unassigned" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="unassigned">Unassigned</SelectItem>
-                                    {teamMembers.map((member) => (
-                                        <SelectItem key={member} value={member}>
-                                            {member}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <div className="flex gap-2">
+                                <Select
+                                    value={request.assignedTo || "unassigned"}
+                                    onValueChange={(val: string) => onAssign && onAssign(id, val === "unassigned" ? "" : val)}
+                                    disabled={isAssignmentLocked}
+                                >
+                                    <SelectTrigger className="h-7 text-xs w-[120px]">
+                                        <SelectValue placeholder="Unassigned" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="unassigned">Unassigned</SelectItem>
+                                        {teamMembers.map((member) => (
+                                            <SelectItem key={member} value={member}>
+                                                {member}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+
+                                {onStatusChange && (
+                                    <Select
+                                        value={request.status}
+                                        onValueChange={(val: string) => onStatusChange(id, val)}
+                                    >
+                                        <SelectTrigger className="h-7 text-xs w-[100px]">
+                                            <SelectValue placeholder="Status" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="New">New</SelectItem>
+                                            <SelectItem value="In Progress">In Progress</SelectItem>
+                                            <SelectItem value="Repaired">Repaired</SelectItem>
+                                            <SelectItem value="Scrap">Scrap</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            </div>
                         </div>
                     )}
 
@@ -95,6 +123,17 @@ export function RequestCard({ id, request, teamMembers, onAssign }: RequestCardP
                             <User className="h-3 w-3" />
                             {request.assignedTo}
                         </div>
+                    )}
+
+                    {/* Mark Complete Action */}
+                    {onComplete && request.status !== 'Repaired' && (
+                        <button
+                            onClick={() => onComplete(id)}
+                            className="w-full mt-3 flex items-center justify-center gap-2 bg-green-100 text-green-700 text-xs font-bold py-1.5 rounded-md hover:bg-green-200 transition-colors"
+                        >
+                            <span className="h-3 w-3 rounded-full border-2 border-green-600" />
+                            Mark as Finished
+                        </button>
                     )}
 
                 </CardContent>

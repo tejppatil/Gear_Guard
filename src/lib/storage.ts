@@ -9,13 +9,21 @@ interface DataStore {
     teams: typeof MOCK_TEAMS;
     equipment: typeof MOCK_EQUIPMENT;
     requests: typeof MOCK_REQUESTS;
+    users: any[];
 }
+
+// Initial Users
+const INITIAL_USERS = [
+    { _id: 'admin', username: 'admin', password: 'admin123', role: 'admin', name: 'Administrator' },
+    // Teams will be generated dynamically or can be added here
+];
 
 // Initialize with mock data values if file doesn't exist
 const INITIAL_DATA: DataStore = {
     teams: MOCK_TEAMS,
     equipment: MOCK_EQUIPMENT,
     requests: MOCK_REQUESTS,
+    users: INITIAL_USERS,
 };
 
 function readData(): DataStore {
@@ -120,4 +128,54 @@ export const deleteRequest = (id: string) => {
     const data = readData();
     data.requests = data.requests.filter(r => r._id !== id);
     writeData(data);
+};
+
+// USERS & AUTH
+export const getUsers = () => {
+    const data = readData();
+    // Ensure admin exists
+    if (!data.users || data.users.length === 0) {
+        data.users = INITIAL_USERS;
+        writeData(data);
+    }
+    // Sync Teams as Users
+    const teamUsers = data.teams.map(t => ({
+        _id: t._id,
+        username: t.name.toLowerCase().replace(/\s+/g, ''),
+        password: 'pass', // Default password for teams
+        role: 'team',
+        teamId: t._id,
+        name: t.name
+    }));
+
+    // Combine Admin + Team Users (deduplicate by checking username)
+    const existingUsernames = new Set(data.users.map(u => u.username));
+    const newTeamUsers = teamUsers.filter(u => !existingUsernames.has(u.username));
+
+    if (newTeamUsers.length > 0) {
+        data.users = [...data.users, ...newTeamUsers];
+        writeData(data);
+    }
+
+    return data.users;
+};
+
+export const authenticateUser = (username: string, pass: string) => {
+    const users = getUsers();
+    const user = users.find(u => u.username === username && u.password === pass);
+    if (user) {
+        const { password, ...safeUser } = user;
+        return safeUser;
+    }
+    return null;
+};
+
+export const getUser = (id: string) => {
+    const users = getUsers();
+    const user = users.find(u => u._id === id);
+    if (user) {
+        const { password, ...safeUser } = user;
+        return safeUser;
+    }
+    return null;
 };

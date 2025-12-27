@@ -17,12 +17,29 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+    let body;
+    try {
+        body = await request.json();
+    } catch (e) {
+        return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+    }
+
     try {
         await connectToDatabase();
-        const body = await request.json();
         const team = await MaintenanceTeam.create(body);
         return NextResponse.json(team, { status: 201 });
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to create team' }, { status: 500 });
+        console.warn('Database offline, saving team to file');
+        try {
+            const { addTeam } = await import('@/lib/storage');
+
+            // Validate body minimally
+            if (!body.name) return NextResponse.json({ error: 'Name required' }, { status: 400 });
+
+            const newTeam = addTeam(body);
+            return NextResponse.json(newTeam, { status: 201 });
+        } catch (storageError) {
+            return NextResponse.json({ error: 'Failed to create team' }, { status: 500 });
+        }
     }
 }

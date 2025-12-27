@@ -23,9 +23,15 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+    let body;
+    try {
+        body = await request.json();
+    } catch (e) {
+        return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+    }
+
     try {
         await connectToDatabase();
-        const body = await request.json();
         const { equipment: equipmentId } = body;
 
         // Auto-Fill Logic: Fetch Equipment to get the Maintenance Team
@@ -44,7 +50,6 @@ export async function POST(request: Request) {
         return NextResponse.json(newRequest, { status: 201 });
     } catch (error) {
         console.warn('Database offline, using file storage');
-        const body = await request.json();
         const { getEquipment, addRequest } = await import('@/lib/storage');
 
         // Mock Auto-Fill Logic using stored equipment

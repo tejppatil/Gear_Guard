@@ -99,7 +99,21 @@ export default function NewEquipmentPage() {
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="category">Category</Label>
-                                <Input id="category" name="category" required placeholder="e.g. Printer, CNC" onChange={handleChange} />
+                                <select
+                                    id="category"
+                                    name="category"
+                                    required
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    onChange={handleChange}
+                                    value={formData.category}
+                                >
+                                    <option value="">Select Category</option>
+                                    <option value="Machinery">Machinery</option>
+                                    <option value="Vehicle">Vehicle</option>
+                                    <option value="Tool">Tool</option>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="Furniture">Furniture</option>
+                                </select>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="maintenanceTeam">Maintenance Team</Label>
@@ -119,7 +133,21 @@ export default function NewEquipmentPage() {
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="department">Department</Label>
-                                <Input id="department" name="department" required placeholder="e.g. Production" onChange={handleChange} />
+                                <select
+                                    id="department"
+                                    name="department"
+                                    required
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    onChange={handleChange}
+                                    value={formData.department}
+                                >
+                                    <option value="">Select Department</option>
+                                    <option value="Production">Production</option>
+                                    <option value="Maintenance">Maintenance</option>
+                                    <option value="Operations">Operations</option>
+                                    <option value="Logistics">Logistics</option>
+                                    <option value="IT">IT</option>
+                                </select>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="assignedTo">Assigned To (Employee)</Label>

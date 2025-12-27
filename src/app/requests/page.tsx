@@ -28,6 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge"; // I will simulate badge style if not imported, but shadcn/ui usually has it. I'll use inline class.
 
 import { RequestCard } from "@/components/RequestCard";
+import { useAuth } from "@/context/AuthContext";
 
 function Column({ id, title, items }: { id: string, title: string, items: any[] }) {
     const { setNodeRef } = useSortable({ id });
@@ -48,39 +49,53 @@ function Column({ id, title, items }: { id: string, title: string, items: any[] 
     );
 }
 
-export default function KanbanPage() {
-    const [items, setItems] = useState<any[]>([]);
-    const [activeId, setActiveId] = useState<string | null>(null);
+export default function RequestsPage() {
+    const { user } = useAuth();
+    const [requests, setRequests] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [activeId, setActiveId] = useState<string | null>(null);
 
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }), // Drag after 5px move to prevent accidental clicks
+        useSensor(PointerSensor),
         useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
     );
 
     useEffect(() => {
-        fetch("/api/requests")
-            .then(res => res.json())
-            .then(data => {
-                if (Array.isArray(data)) {
-                    setItems(data);
-                } else {
-                    console.error("Requests API Error:", data);
-                    setItems([]);
+        fetchRequests();
+    }, [user]);
+
+    const fetchRequests = async () => {
+        try {
+            const res = await fetch("/api/requests");
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                // Filter requests for team users
+                let filteredData = data;
+                if (user?.role === 'team' && user.teamId) {
+                    filteredData = data.filter((req: any) => {
+                        const teamId = typeof req.maintenanceTeam === 'object'
+                            ? req.maintenanceTeam._id
+                            : req.maintenanceTeam;
+                        return teamId === user.teamId;
+                    });
                 }
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
-            });
-    }, []);
+                setRequests(filteredData);
+            } else {
+                console.error("Requests API Error:", data);
+                setRequests([]);
+            }
+        } catch (error) {
+            console.error("Failed to fetch requests", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const columns = {
-        'New': items.filter(i => i.status === 'New'),
-        'In Progress': items.filter(i => i.status === 'In Progress'),
-        'Repaired': items.filter(i => i.status === 'Repaired'),
-        'Scrap': items.filter(i => i.status === 'Scrap'),
+        'New': requests.filter((i: any) => i.status === 'New'),
+        'In Progress': requests.filter((i: any) => i.status === 'In Progress'),
+        'Repaired': requests.filter((i: any) => i.status === 'Repaired'),
+        'Scrap': requests.filter((i: any) => i.status === 'Scrap'),
     };
 
     const handleDragStart = (event: DragStartEvent) => {
@@ -109,32 +124,46 @@ export default function KanbanPage() {
         if (Object.keys(columns).includes(overId as string)) {
             newStatus = overId as string;
         } else {
-            // Find the item we dropped over to find its status
-            const overItem = items.find(i => i._id === overId);
-            if (overItem) newStatus = overItem.status;
+            // If overId is an item ID, find its parent column's status
+            const overItem = requests.find((i: any) => i._id === overId);
+            if (overItem) {
+                newStatus = overItem.status;
+            }
         }
 
-        if (newStatus) {
+        if (newStatus && activeItem.status !== newStatus) {
             // Optimistic update
-            setItems((prev) => {
-                return prev.map(item => {
-                    if (item._id === activeId) {
-                        return { ...item, status: newStatus };
-                    }
-                    return item;
-                });
-            });
+            setRequests((prev: any[]) =>
+                prev.map((item: any) =>
+                    item._id === activeId ? { ...item, status: newStatus } : item
+                )
+            );
 
             // API Call
             try {
-                await fetch(`/api/requests/${activeId}`, {
+                const res = await fetch(`/api/requests/${activeId}`, {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ status: newStatus }),
+                    body: JSON.stringify({ status: newStatus })
                 });
+
+                if (!res.ok) {
+                    console.error("Failed to update request status on server");
+                    // Revert optimistic update if API call fails (optional for MVP)
+                    setRequests((prev: any[]) =>
+                        prev.map((item: any) =>
+                            item._id === activeId ? { ...item, status: activeItem.status } : item
+                        )
+                    );
+                }
             } catch (error) {
-                console.error("Failed to update status");
-                // Revert details omitted for MVP
+                console.error("Failed to update request status", error);
+                // Revert optimistic update if API call fails (optional for MVP)
+                setRequests((prev: any[]) =>
+                    prev.map((item: any) =>
+                        item._id === activeId ? { ...item, status: activeItem.status } : item
+                    )
+                );
             }
         }
 
@@ -144,15 +173,17 @@ export default function KanbanPage() {
     return (
         <div className="h-full flex flex-col space-y-6">
             <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Maintenance Board</h1>
-                    <p className="text-muted-foreground">Manage ongoing repairs and requests.</p>
+                <div className="flex items-center justify-between mb-6 w-full">
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight">Maintenance Requests</h1>
+                        <p className="text-muted-foreground">Drag and drop to change status</p>
+                    </div>
+                    <Link href="/requests/new">
+                        <Button size="lg">
+                            <Plus className="mr-2 h-4 w-4" /> New Request
+                        </Button>
+                    </Link>
                 </div>
-                <Link href="/requests/new">
-                    <Button>
-                        <Plus className="mr-2 h-4 w-4" /> New Request
-                    </Button>
-                </Link>
             </div>
 
             {loading ? (

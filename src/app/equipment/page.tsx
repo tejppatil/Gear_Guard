@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
 
 interface Equipment {
     _id: string;
@@ -16,11 +17,12 @@ interface Equipment {
     assignedTo?: string;
     status: string;
     category: string;
-    maintenanceTeam: { name: string } | string;
+    maintenanceTeam: { name: string; _id: string } | string;
     imageUrl?: string;
 }
 
 export default function EquipmentPage() {
+    const { user } = useAuth();
     const [equipment, setEquipment] = useState<Equipment[]>([]);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
@@ -28,7 +30,7 @@ export default function EquipmentPage() {
 
     useEffect(() => {
         fetchEquipment();
-    }, [search]);
+    }, [search, user]);
 
     const fetchEquipment = async () => {
         try {
@@ -37,7 +39,17 @@ export default function EquipmentPage() {
             const res = await fetch(`/api/equipment?${params.toString()}`);
             const data = await res.json();
             if (Array.isArray(data)) {
-                setEquipment(data);
+                // Filter equipment for team users
+                let filteredData = data;
+                if (user?.role === 'team' && user.teamId) {
+                    filteredData = data.filter((eq: Equipment) => {
+                        const teamId = typeof eq.maintenanceTeam === 'object'
+                            ? eq.maintenanceTeam._id
+                            : eq.maintenanceTeam;
+                        return teamId === user.teamId;
+                    });
+                }
+                setEquipment(filteredData);
             } else {
                 console.error("Equipment API Error:", data);
                 setEquipment([]);
