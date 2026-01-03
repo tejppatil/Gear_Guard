@@ -1,7 +1,7 @@
 
 const mongoose = require('mongoose');
 
-// Use IPv4 loopback to avoid IPv6 connection delays
+// Use IPv4 loopback to avoid IPv6 connection delay
 const MONGODB_URI = 'mongodb://127.0.0.1:27017/gearguard';
 
 // --- Simplified Schemas for Seeding ---
